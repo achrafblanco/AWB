@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/commande" />
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
@@ -13,6 +16,8 @@
         <option value="$PROJECT_DIR$/Projet_Microservice-livraison_service/Projet_Microservice-livraison_service/pom.xml" />
         <option value="$PROJECT_DIR$/livraison_service/pom.xml" />
         <option value="$PROJECT_DIR$/ProductsCategories/pom.xml" />
+        <option value="$PROJECT_DIR$/commande/pom.xml" />
+        <option value="$PROJECT_DIR$/project-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
