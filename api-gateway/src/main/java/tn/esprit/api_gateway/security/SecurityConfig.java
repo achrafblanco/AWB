@@ -1,6 +1,16 @@
 package tn.esprit.api_gateway.security;
 
-/*@Configuration
+import jakarta.ws.rs.HttpMethod;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+
+@Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
@@ -32,6 +42,6 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig); // Apply this configuration to all paths
 
-        return source;
+        return (CorsConfigurationSource) source;
     }
-}*/
+}

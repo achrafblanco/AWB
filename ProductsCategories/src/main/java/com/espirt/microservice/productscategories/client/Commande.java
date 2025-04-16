@@ -1,7 +1,7 @@
-package tn.esprit.commande.Entity;
+package com.espirt.microservice.productscategories.client;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,31 +19,26 @@ public class Commande {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonFormat
+
     private Long idcommande;
+    @JsonFormat
 
     private String details;
 
     @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date orderdate;
+    @JsonFormat
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
-    private User user;
 
-    @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Livraison livraison;
+
 
     public enum Status {
         Pending, Processed, Shipped
     }
-
-
 
     public Long getIdcommande() {
         return idcommande;
@@ -68,7 +63,5 @@ public class Commande {
     public void setStatus(Status status) {
         this.status = status;
     }
-    public User getUser() {
-        return user;
-    }
 }
+

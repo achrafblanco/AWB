@@ -12,6 +12,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
     networks:
       - microservices-network
+
   config-service:
     container_name: config-service
     image: config-service
@@ -26,19 +27,18 @@ services:
       - microservices-network
 
   mysql:
-      image: mysql:8.0
-      container_name: mysql-db
-      restart: always
-      environment:
-        MYSQL_ROOT_PASSWORD: root
-      ports:
-        - "3306:3306"
-      networks:
-        - microservices-network
-      volumes:
-        - mysql-data:/var/lib/mysql
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    networks:
+      - microservices-network
+    volumes:
+      - mysql-data:/var/lib/mysql
 
-  # phpMyAdmin (Interface de gestion MySQL)
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
@@ -52,6 +52,7 @@ services:
       - microservices-network
     depends_on:
       - mysql
+
   profile-service:
     container_name: profile-service
     image: profile-service
@@ -75,13 +76,69 @@ services:
     image: api-gateway
     build: ./api-gateway
     ports:
-      - "8222:8222"  # Port exposé pour l'API Gateway
+      - "8222:8222"
     environment:
       - HOSTNAME=api-gateway
-      - EEUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
     depends_on:
       - discovery-service
       - profile-service
+    networks:
+      - microservices-network
+
+  course-service:
+    container_name: course-service
+    image: course-service
+    build: ./course-service
+    ports:
+      - "8085:8085"
+    environment:
+      - HOSTNAME=course-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/projetawb_db?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - discovery-service
+      - mysql
+    networks:
+      - microservices-network
+
+  products-categories-service:
+    container_name: products-categories-service
+    image: products-categories-service
+    build: ./products-categories-service
+    ports:
+      - "8089:8089"
+    environment:
+      - HOSTNAME=products-categories-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/ProductsCategories?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    volumes:
+      - ./uploads:/uploads
+    depends_on:
+      - discovery-service
+      - mysql
+    networks:
+      - microservices-network
+
+  projet-pi-service:
+    container_name: projet-pi-service
+    image: projet-pi-service
+    build: ./projet-pi-service
+    ports:
+      - "8081:8081"
+    environment:
+      - HOSTNAME=projet-pi-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/Pi?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - discovery-service
+      - mysql
     networks:
       - microservices-network
 
@@ -89,6 +146,5 @@ networks:
   microservices-network:
     driver: bridge
 
-
 volumes:
-  mysql-data:  # Volume pour persister les données de MySQL
+  mysql-data:
