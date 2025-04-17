@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 services:
   discovery-service:
@@ -16,7 +16,7 @@ services:
   config-service:
     container_name: config-service
     image: config-service
-    build: ./config-service
+    build: ./config-server
     ports:
       - "8888:8888"
     environment:
@@ -56,7 +56,7 @@ services:
   profile-service:
     container_name: profile-service
     image: profile-service
-    build: ./profile-service
+    build: ./project-service
     ports:
       - "8091:8091"
     environment:
@@ -89,7 +89,7 @@ services:
   course-service:
     container_name: course-service
     image: course-service
-    build: ./course-service
+    build: ./commande
     ports:
       - "8085:8085"
     environment:
@@ -107,7 +107,7 @@ services:
   products-categories-service:
     container_name: products-categories-service
     image: products-categories-service
-    build: ./products-categories-service
+    build: ./productsCategories
     ports:
       - "8089:8089"
     environment:
@@ -127,11 +127,29 @@ services:
   projet-pi-service:
     container_name: projet-pi-service
     image: projet-pi-service
-    build: ./projet-pi-service
+    build: ./ProjetPi
     ports:
       - "8081:8081"
     environment:
       - HOSTNAME=projet-pi-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/Pi?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - discovery-service
+      - mysql
+    networks:
+      - microservices-network
+
+  security:
+    container_name: security
+    image: security
+    build: ./security
+    ports:
+      - "8086:8086"
+    environment:
+      - HOSTNAME=security
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/Pi?createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=root
